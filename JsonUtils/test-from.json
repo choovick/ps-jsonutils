@@ -1,0 +1,33 @@
+{
+    "ChangedArrayTest": [
+        {
+            "ArrayObject-1-a": "ArrayObject-1-a-value",
+            "ArrayObject-1-b": "ArrayObject-1-b-value"
+        },
+        {
+            "ArrayObject-2-b": "ArrayObject-2-b-value",
+            "ArrayObject-1-a": null
+        }
+    ],
+    "NotChangedArrayTest": [
+        {
+            "ArrayTestToNotChange1": "ArrayTestToNotChange1Value",
+            "ArrayTestToNotChange2": "ArrayTestToNotChange2Value"
+        },
+        3
+    ],
+    "RemovedAtRootInt2": 2,
+    "ChangedObject": {
+        "RemovedSubObject": "RemovedSubObjectOldValue",
+        "ChangedSubObject": "ChangedSubObjectOldValue"
+    },
+    "NotChangedObject": {
+        "NotChangedObjectSubObject1": "NotChangedObjectSubObject1Value",
+        "NotChangedObjectSubObject2": "NotChangedObjectSubObject1Value"
+    },
+    "ChangedPrimitiveToNull": "ChangedPrimitiveToNullValue",
+    "ChangedNullToPrimitive": null,
+    "NotChangedNum": 6.9,
+    "NotChangedBoolean": true,
+    "RemovedNullItem": null
+}
