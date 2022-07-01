@@ -49,4 +49,9 @@ Describe "JsonUtils" {
         ConvertTo-KeysSortedJSONString -JsonString  (Get-Content -Path "$PSScriptRoot/test-result.json" -Raw) -Compress `
         | Should -BeExactly (Get-Content -Path "$PSScriptRoot/test-result-sorted.json" -Raw)
     }
+    
+    It "SortTest pipeline" {
+        Get-Content -Path "$PSScriptRoot/test-result.json" -Raw | ConvertTo-KeysSortedJSONString -Compress `
+        | Should -BeExactly (Get-Content -Path "$PSScriptRoot/test-result-sorted.json" -Raw)
+    }
 }
