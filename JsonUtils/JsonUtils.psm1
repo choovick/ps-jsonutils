@@ -344,6 +344,16 @@ function ConvertTo-KeysSortedJSONString
             "b": 1
         }
 
+    .EXAMPLE
+        '{"b":1,"1":{"b":null,"a":1}}' | ConvertTo-KeysSortedJSONString
+        {
+            "1": {
+                "a": 1,
+                "b": null
+            },
+            "b": 1
+        }
+
     .LINK
         https://github.com/choovick/ps-jsonutils
 
@@ -351,20 +361,26 @@ function ConvertTo-KeysSortedJSONString
     [CmdletBinding()]
     [OutputType([String])]
     param(
-        [Parameter(Mandatory = $true)]
+        [Parameter(
+            Mandatory,
+            ValueFromPipeline
+        )]
         [String]$JsonString,
         [Parameter(Mandatory = $false)]
         [String]$Depth = 25,
         [Switch]$Compress
     )
-    try
+    process 
     {
-        $ResultObject = Get-SortedPSCustomObjectRecursion -InputObject (ConvertFrom-Json $JsonString)
-        return $ResultObject | ConvertTo-Json -Compress:$Compress -Depth $Depth
-    }
-    catch
-    {
-        throw
+        try
+        {
+            $ResultObject = Get-SortedPSCustomObjectRecursion -InputObject (ConvertFrom-Json $JsonString)
+            return $ResultObject | ConvertTo-Json -Compress:$Compress -Depth $Depth
+        }
+        catch
+        {
+            throw
+        }
     }
 }
 
