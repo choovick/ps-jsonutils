@@ -361,11 +361,13 @@ function ConvertTo-KeysSortedJSONString
     [CmdletBinding()]
     [OutputType([String])]
     param(
+        [ObjectTransformAttribute()]
+        [Alias("JsonString")]
         [Parameter(
             Mandatory,
             ValueFromPipeline
         )]
-        [String]$JsonString,
+        $InputObject,
         [Parameter(Mandatory = $false)]
         [String]$Depth = 25,
         [Switch]$Compress
@@ -374,12 +376,27 @@ function ConvertTo-KeysSortedJSONString
     {
         try
         {
-            $ResultObject = Get-SortedPSCustomObjectRecursion -InputObject (ConvertFrom-Json $JsonString)
+            $ResultObject = Get-SortedPSCustomObjectRecursion -InputObject $InputObject
             return $ResultObject | ConvertTo-Json -Compress:$Compress -Depth $Depth
         }
         catch
         {
             throw
+        }
+    }
+}
+
+class ObjectTransformAttribute : System.Management.Automation.ArgumentTransformationAttribute 
+{
+    [object] Transform([System.Management.Automation.EngineIntrinsics]$engineIntrinsics, [object] $inputData) 
+    {
+        if ($inputData -is [PSCustomObject]) 
+        {
+            return $inputData
+        }
+        else 
+        {
+            return $inputData | ConvertFrom-Json
         }
     }
 }
