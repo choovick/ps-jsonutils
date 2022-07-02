@@ -33,6 +33,16 @@ Available in PSGallery: [https://www.powershellgallery.com/packages/JsonUtils](h
 Install-Module -Name JsonUtils -Scope CurrentUser
 ```
 
+## Roadmap
+
+2022-07-01 Szeraax-
+
+I want to work this module towards a v1.0 release. I plan to make a full code review of the module to improve readability and improve performance. Stuff like using objects and `Add-Member` is generally quite inefficient.
+
+It is likely that I will change at least 1 function name. I may change some parameter names. If I do, I will deprecate and add warning message, without breaking changes unless absolutely needed (unlikely).
+
+Stay tuned!
+
 ## Usage
 
 Full usage documentation in function docs
