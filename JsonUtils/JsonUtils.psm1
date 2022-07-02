@@ -370,11 +370,12 @@ function ConvertTo-KeysSortedJSONString
         [String]$Depth = 25,
         [Switch]$Compress
     )
-    process 
+    process
     {
         try
         {
-            foreach ($item in $JsonString) {
+            foreach ($item in $JsonString)
+            {
                 $ResultObject = Get-SortedPSCustomObjectRecursion -InputObject (ConvertFrom-Json $item)
                 $ResultObject | ConvertTo-Json -Compress:$Compress -Depth $Depth
             }

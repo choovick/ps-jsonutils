@@ -4,7 +4,7 @@
     RootModule        = 'JsonUtils.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '0.2.1'
+    ModuleVersion     = '0.2.2'
 
     # Supported PSEditions
     # CompatiblePSEditions = @()
@@ -90,7 +90,7 @@
         PSData = @{
 
             # Tags applied to this module. These help with module discovery in online galleries.
-            Tags = @('json','diff','sort')
+            Tags       = @('json', 'diff', 'sort')
 
             # A URL to the license for this module.
             LicenseUri = 'https://github.com/choovick/ps-jsonutils/blob/master/LICENSE'
@@ -109,10 +109,9 @@
     } # End of PrivateData hashtable
 
     # HelpInfo URI of this module
-    HelpInfoURI = 'https://github.com/choovick/ps-jsonutils'
+    HelpInfoURI       = 'https://github.com/choovick/ps-jsonutils'
 
     # Default prefix for commands exported from this module. Override the default prefix using Import-Module -Prefix.
     # DefaultCommandPrefix = ''
 
 }
-
