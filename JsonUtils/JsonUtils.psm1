@@ -335,7 +335,7 @@ function ConvertTo-KeysSortedJSONString
         String of sorted and stringified JSON object
 
     .EXAMPLE
-        ConvertTo-KeysSortedJSONString -JsonString '{"b":1,"1":{"b":null,"a":1}}'
+        Convert-JsonKeysToSorted -JsonString '{"b":1,"1":{"b":null,"a":1}}'
         {
             "1": {
                 "a": 1,
@@ -345,7 +345,7 @@ function ConvertTo-KeysSortedJSONString
         }
 
     .EXAMPLE
-        '{"b":1,"1":{"b":null,"a":1}}' | ConvertTo-KeysSortedJSONString
+        '{"b":1,"1":{"b":null,"a":1}}' | Convert-JsonKeysToSorted
         {
             "1": {
                 "a": 1,
@@ -359,6 +359,7 @@ function ConvertTo-KeysSortedJSONString
 
     #>
     [CmdletBinding()]
+    [Alias("Convert-JsonKeysToSorted")]
     [OutputType([String])]
     param(
         [Parameter(
@@ -370,6 +371,14 @@ function ConvertTo-KeysSortedJSONString
         [String]$Depth = 25,
         [Switch]$Compress
     )
+    begin
+    {
+        if ($MyInvocation.InvocationName -eq "ConvertTo-KeysSortedJSONString")
+        {
+            Write-Warning "DEPRECATED: Use Convert-JsonKeysToSorted instead of ConvertTo-KeysSortedJSONString. ConvertTo-KeysSortedJSONString may be removed in a future release"
+        }
+    }
+
     process
     {
         try
