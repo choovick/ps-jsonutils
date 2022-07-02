@@ -74,4 +74,14 @@ Describe "JsonUtils" {
         Get-Content -Path "$PSScriptRoot/test-result.json" -Raw | Convert-JsonKeysToSorted -Compress `
         | Should -BeExactly (Get-Content -Path "$PSScriptRoot/test-result-sorted.json" -Raw)
     }
+
+    It "SortTest as object" {
+        Convert-JsonKeysToSorted -InputObject (Get-Content -Path "$PSScriptRoot/test-result.json" | ConvertFrom-Json) -Compress `
+        | Should -BeExactly (Get-Content -Path "$PSScriptRoot/test-result-sorted.json" -Raw)
+    }
+
+    It "SortTest as object via pipeline" {
+        Get-Item -Path "$PSScriptRoot/test-result.json" | Select-Object Name, Length | Convert-JsonKeysToSorted -Compress `
+        | Should -BeExactly (Get-Item -Path "$PSScriptRoot/test-result.json" | Select-Object Length, Name | ConvertTo-Json -Compress)
+    }
 }

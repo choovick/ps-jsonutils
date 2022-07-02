@@ -362,11 +362,12 @@ function ConvertTo-KeysSortedJSONString
     [Alias("Convert-JsonKeysToSorted")]
     [OutputType([String])]
     param(
+        [Alias("JsonString")]
         [Parameter(
             Mandatory,
             ValueFromPipeline
         )]
-        [String[]]$JsonString,
+        $InputObject,
         [Parameter(Mandatory = $false)]
         [String]$Depth = 25,
         [Switch]$Compress
@@ -383,9 +384,13 @@ function ConvertTo-KeysSortedJSONString
     {
         try
         {
-            foreach ($item in $JsonString)
+            foreach ($item in $InputObject)
             {
-                $ResultObject = Get-SortedPSCustomObjectRecursion -InputObject (ConvertFrom-Json $item)
+                if ($item -is [string])
+                {
+                    $item = ConvertFrom-Json -InputObject $item
+                }
+                $ResultObject = Get-SortedPSCustomObjectRecursion -InputObject $item
                 $ResultObject | ConvertTo-Json -Compress:$Compress -Depth $Depth
             }
         }
