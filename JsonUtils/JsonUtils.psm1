@@ -365,7 +365,7 @@ function ConvertTo-KeysSortedJSONString
             Mandatory,
             ValueFromPipeline
         )]
-        [String]$JsonString,
+        [String[]]$JsonString,
         [Parameter(Mandatory = $false)]
         [String]$Depth = 25,
         [Switch]$Compress
@@ -374,8 +374,10 @@ function ConvertTo-KeysSortedJSONString
     {
         try
         {
-            $ResultObject = Get-SortedPSCustomObjectRecursion -InputObject (ConvertFrom-Json $JsonString)
-            return $ResultObject | ConvertTo-Json -Compress:$Compress -Depth $Depth
+            foreach ($item in $JsonString) {
+                $ResultObject = Get-SortedPSCustomObjectRecursion -InputObject (ConvertFrom-Json $item)
+                $ResultObject | ConvertTo-Json -Compress:$Compress -Depth $Depth
+            }
         }
         catch
         {
