@@ -64,6 +64,15 @@ Describe "JsonUtils" {
         Convert-JsonKeysToSorted -JsonString (Get-Content -Path "$PSScriptRoot/test-result.json" -Raw) -Compress `
         | Should -BeExactly (Get-Content -Path "$PSScriptRoot/test-result-sorted.json" -Raw)
     }
+    It "SortTest single items" {
+        Convert-JsonKeysToSorted -JsonString '{"b":1,"1":[{"b":null,"a":1}]}' -Compress `
+        | Should -BeExactly '{"1":[{"a":1,"b":null}],"b":1}'
+    }
+    It "SortTest single array" {
+        Convert-JsonKeysToSorted -JsonString '[{"b":1,"1":[{"b":null,"a":1}]}]' -Compress `
+        | Should -BeExactly '[{"1":[{"a":1,"b":null}],"b":1}]'
+    }
+
     It "SortTest array" {
         $string = Get-Content -Path "$PSScriptRoot/test-result.json" -Raw
         Convert-JsonKeysToSorted -JsonString ($string, $string) -Compress `

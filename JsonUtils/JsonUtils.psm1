@@ -388,10 +388,10 @@ function ConvertTo-KeysSortedJSONString
             {
                 if ($item -is [string])
                 {
-                    $item = ConvertFrom-Json -InputObject $item
+                    $item = ConvertFrom-Json -InputObject $item -NoEnumerate
                 }
                 $ResultObject = Get-SortedPSCustomObjectRecursion -InputObject $item
-                $ResultObject | ConvertTo-Json -Compress:$Compress -Depth $Depth
+                ConvertTo-Json -Compress:$Compress -Depth $Depth -InputObject $ResultObject
             }
         }
         catch
@@ -422,15 +422,19 @@ function Get-SortedPSCustomObjectRecursion
         [PSCustomObject]$InputObject
     )
 
+    # Use the Unary Comma operator on returns to ensure that arrays with only 1 item dont get unrolled/flattened/enumerated:
+    # https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_operators#comma-operator-
+
     try
     {
         # null handle
         if ($null -eq $InputObject)
         {
-            return $InputObject
+            return , $InputObject
         }
+
         # object
-        if ($InputObject.GetType() -eq ([PSCustomObject]@{ }).GetType())
+        elseif ($InputObject.GetType() -eq ([PSCustomObject]@{ }).GetType())
         {
             # soft object by keys
             # thanks to https://stackoverflow.com/a/44056862/2174835
@@ -452,8 +456,9 @@ function Get-SortedPSCustomObjectRecursion
                 $SortedInputObject.$PropertyName = Get-SortedPSCustomObjectRecursion -InputObject $PropertyValue
             }
 
-            return $SortedInputObject
+            return , $SortedInputObject
         }
+
         # array, sort each item within array
         elseif ($InputObject.GetType() -eq @().GetType())
         {
@@ -464,10 +469,14 @@ function Get-SortedPSCustomObjectRecursion
                 $SortedArrayObjects += @(Get-SortedPSCustomObjectRecursion -InputObject $Item)
             }
 
-            return $SortedArrayObjects
+            return , $SortedArrayObjects
         }
+
         # primitive are not sorted as returned as is
-        return $InputObject
+        else
+        {
+            return , $InputObject
+        }
     }
     catch
     {
