@@ -248,8 +248,12 @@ function Get-JsonDifferenceRecursion
                 elseif ($FromValueType -eq @().GetType() -and $ToValueType -eq @().GetType())
                 {
                     # stringify array
-                    $FromJSON = Get-SortedPSCustomObjectRecursion $FromObject.$ToName | ConvertTo-Json -Depth $Depth
-                    $ToJSON = Get-SortedPSCustomObjectRecursion $ToObject.$ToName | ConvertTo-Json -Depth $Depth
+                    $out = [System.Collections.Generic.list[Object]]@()
+                    Get-SortedPSCustomObjectRecursion $FromObject.$ToName -OutputObject $out
+                    $FromJSON = $out[0] | ConvertTo-Json -Depth $Depth
+                    $out = [System.Collections.Generic.list[Object]]@()
+                    Get-SortedPSCustomObjectRecursion $ToObject.$ToName -OutputObject $out
+                    $ToJSON = $out[0] | ConvertTo-Json -Depth $Depth
 
                     # add to changed object if values are different for stringified array
                     if ($FromJSON -cne $ToJSON)
@@ -390,7 +394,9 @@ function ConvertTo-KeysSortedJSONString
                 {
                     $item = ConvertFrom-Json -InputObject $item
                 }
-                $ResultObject = Get-SortedPSCustomObjectRecursion -InputObject $item
+                $out = [System.Collections.Generic.list[Object]]@()
+                Get-SortedPSCustomObjectRecursion -InputObject $item -OutputObject $out
+                $ResultObject = $out[0]
                 $ResultObject | ConvertTo-Json -Compress:$Compress -Depth $Depth
             }
         }
@@ -418,8 +424,8 @@ function Get-SortedPSCustomObjectRecursion
     [CmdletBinding()]
     [OutputType([Object])]
     param(
-        [Parameter(Mandatory = $false)]
-        [PSCustomObject]$InputObject
+        [PSCustomObject]$InputObject,
+        $OutputObject
     )
 
     try
@@ -427,10 +433,11 @@ function Get-SortedPSCustomObjectRecursion
         # null handle
         if ($null -eq $InputObject)
         {
-            return $InputObject
+            $OutputObject.add($InputObject)
         }
+
         # object
-        if ($InputObject.GetType() -eq ([PSCustomObject]@{ }).GetType())
+        elseif ($InputObject.GetType() -eq ([PSCustomObject]@{ }).GetType())
         {
             # soft object by keys
             # thanks to https://stackoverflow.com/a/44056862/2174835
@@ -449,10 +456,12 @@ function Get-SortedPSCustomObjectRecursion
                 # Access the value of the property
                 $PropertyValue = $Property.Value
 
-                $SortedInputObject.$PropertyName = Get-SortedPSCustomObjectRecursion -InputObject $PropertyValue
+                $out = [System.Collections.Generic.list[Object]]@()
+                Get-SortedPSCustomObjectRecursion -InputObject $PropertyValue -OutputObject $out
+                $SortedInputObject.$PropertyName = $out[0]
             }
-
-            return $SortedInputObject
+            $OutputObject.Add($SortedInputObject)
+            # return $SortedInputObject
         }
         # array, sort each item within array
         elseif ($InputObject.GetType() -eq @().GetType())
@@ -461,13 +470,18 @@ function Get-SortedPSCustomObjectRecursion
 
             foreach ($Item in $InputObject)
             {
-                $SortedArrayObjects += @(Get-SortedPSCustomObjectRecursion -InputObject $Item)
+                $out = [System.Collections.Generic.list[Object]]@()
+                Get-SortedPSCustomObjectRecursion -InputObject $Item -OutputObject $out
+                $SortedArrayObjects += $out[0]
             }
 
-            return $SortedArrayObjects
+            $OutputObject.add($SortedArrayObjects)
         }
         # primitive are not sorted as returned as is
-        return $InputObject
+        else
+        {
+            $OutputObject.add($InputObject)
+        }
     }
     catch
     {
