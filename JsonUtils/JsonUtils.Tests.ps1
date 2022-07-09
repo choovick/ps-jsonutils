@@ -89,6 +89,11 @@ Describe "JsonUtils" {
         | Should -BeExactly (Get-Content -Path "$PSScriptRoot/test-result-sorted.json" -Raw)
     }
 
+    It "SortTest as object with hashtable in array" {
+        @{one = @(@{two = 3; one = @{baz = 3; bat = 2 } }); foo = 5 } | Convert-JsonKeysToSorted -Compress `
+        | Should -BeExactly '{"foo":5,"one":[{"one":{"bat":2,"baz":3},"two":3}]}'
+    }
+
     It "SortTest as object via pipeline" {
         Get-Item -Path "$PSScriptRoot/test-result.json" | Select-Object Name, Length | Convert-JsonKeysToSorted -Compress `
         | Should -BeExactly (Get-Item -Path "$PSScriptRoot/test-result.json" | Select-Object Length, Name | ConvertTo-Json -Compress)

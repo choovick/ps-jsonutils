@@ -433,8 +433,14 @@ function Get-SortedPSCustomObjectRecursion
             return , $InputObject
         }
 
+        # Hashtables should be transformed to object
+        if (@{}.GetType() -eq $InputObject.GetType())
+        {
+            $InputObject = [PSCustomObject]$InputObject
+        }
+
         # object
-        elseif ($InputObject.GetType() -eq ([PSCustomObject]@{ }).GetType())
+        if ($InputObject.GetType() -eq ([PSCustomObject]@{ }).GetType())
         {
             # soft object by keys
             # thanks to https://stackoverflow.com/a/44056862/2174835
