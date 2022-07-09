@@ -388,7 +388,14 @@ function ConvertTo-KeysSortedJSONString
             {
                 if ($item -is [string])
                 {
-                    $item = ConvertFrom-Json -InputObject $item -NoEnumerate
+                    if ($PSVersionTable.PSVersion.Major -gt 5)
+                    {
+                        $item = ConvertFrom-Json -InputObject $item -NoEnumerate
+                    }
+                    else
+                    {
+                        $item = ConvertFrom-Json -InputObject $item
+                    }
                 }
                 $ResultObject = Get-SortedPSCustomObjectRecursion -InputObject $item
                 ConvertTo-Json -Compress:$Compress -Depth $Depth -InputObject $ResultObject
