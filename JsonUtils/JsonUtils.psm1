@@ -83,19 +83,19 @@ function Get-JsonDifference
     [CmdletBinding()]
     [OutputType([String])]
     param(
-        [Parameter(Mandatory = $true)]
-        [String]$FromJsonString,
-        [Parameter(Mandatory = $true)]
-        [String]$ToJsonString,
-        [Parameter(Mandatory = $false)]
-        [String]$Depth = 25,
+        [Parameter(Mandatory)]
+        [String[]]$FromJsonString,
+        [Parameter(Mandatory)]
+        [String[]]$ToJsonString,
+
+        [System.Int32]$Depth = 25,
         [Switch]$Compress
     )
     try
     {
         # Convert to PSCustomObjects
-        $FromObject = ConvertFrom-Json -InputObject $FromJsonString
-        $ToObject = ConvertFrom-Json -InputObject $ToJsonString
+        $FromObject = $FromJsonString | ConvertFrom-Json
+        $ToObject = $ToJsonString | ConvertFrom-Json
         # Ensuring both inputs are objects
         try
         {

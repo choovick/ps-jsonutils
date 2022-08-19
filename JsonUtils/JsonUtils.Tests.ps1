@@ -13,6 +13,16 @@ Describe "JsonUtils" {
         | Should -BeExactly $ExpectedResult
     }
 
+    It "JSON string array input test" {
+
+        $From = (Get-Content -Path "$PSScriptRoot/test-from.json")
+        $To = (Get-Content -Path "$PSScriptRoot/test-to.json")
+        $ExpectedResult = (Get-Content -Path "$PSScriptRoot/test-result.json" -Raw)
+
+        Get-JsonDifference -FromJsonString $From -ToJsonString $To -Compress `
+        | Should -BeExactly $ExpectedResult
+    }
+
     It "Invalid FromJsonString int test" {
         {
             Get-JsonDifference `
