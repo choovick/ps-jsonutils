@@ -190,7 +190,7 @@ function Get-JsonDifferenceRecursion
             }
 
             # check if property exists in FromObject (in PS 5.1 we cant support case sensitive keys https://github.com/PowerShell/PowerShell/issues/3705)
-            if ([bool]($FromObject.PSObject.Properties.Name -match "^$([System.Text.RegularExpressions.Regex]::Escape($ToName))$"))
+            if ([bool]($FromObject.PSObject.Properties.Name -contains $ToName))
             {
                 # old value
                 $FromValue = $FromObject.$ToName
