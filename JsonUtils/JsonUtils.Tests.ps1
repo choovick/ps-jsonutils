@@ -23,6 +23,22 @@ Describe "JsonUtils" {
         | Should -BeExactly $ExpectedResult
     }
 
+    It "Keys and Values are preserved" {
+        $From = '{"hat": {"rabbit": "Fluffy"}}'
+        $To = '{"hat": {"rabbit banish": "abbacadabra"}}'
+        $ExpectedResult = '{"Added":{"hat":{"rabbit banish":"abbacadabra"}},"Changed":{},"ChangedOriginals":{},"Removed":{"hat":{"rabbit":"Fluffy"}},"NotChanged":{},"New":{"hat":{"rabbit banish":"abbacadabra"}}}'
+
+        Get-JsonDifference -FromJsonString $From -ToJsonString $To -Compress |
+        Should -BeExactly $ExpectedResult
+
+        $From = '{"hat": {"title": "Fluffy"}}'
+        $To = '{"hat": {"subtitle banish": "abbacadabra"}}'
+        $ExpectedResult = '{"Added":{"hat":{"subtitle banish":"abbacadabra"}},"Changed":{},"ChangedOriginals":{},"Removed":{"hat":{"title":"Fluffy"}},"NotChanged":{},"New":{"hat":{"subtitle banish":"abbacadabra"}}}'
+
+        Get-JsonDifference -FromJsonString $From -ToJsonString $To -Compress |
+        Should -BeExactly $ExpectedResult
+    }
+
     It "Invalid FromJsonString int test" {
         {
             Get-JsonDifference `

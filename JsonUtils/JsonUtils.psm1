@@ -190,7 +190,7 @@ function Get-JsonDifferenceRecursion
             }
 
             # check if property exists in FromObject (in PS 5.1 we cant support case sensitive keys https://github.com/PowerShell/PowerShell/issues/3705)
-            if ([bool]($FromObject.PSObject.Properties.Name -match [System.Text.RegularExpressions.Regex]::Escape($ToName)))
+            if ([bool]($FromObject.PSObject.Properties.Name -contains $ToName))
             {
                 # old value
                 $FromValue = $FromObject.$ToName
@@ -279,7 +279,7 @@ function Get-JsonDifferenceRecursion
                 }
             }
             # if value does not exist in the from object, then its was added
-            elseif (-not [bool]($FromObject.PSObject.Properties.Name -match [System.Text.RegularExpressions.Regex]::Escape($ToName)))
+            elseif (-not [bool]($FromObject.PSObject.Properties.Name -contains $ToName))
             {
                 Add-Member -InputObject $Added -MemberType NoteProperty -Name $ToName -Value $ToValue
                 Add-Member -InputObject $New -MemberType NoteProperty -Name $ToName -Value $ToValue
@@ -295,7 +295,7 @@ function Get-JsonDifferenceRecursion
             $FromValue = $Property.Value
 
             # if property not on to object, its removed
-            if (-not [bool]($ToObject.PSObject.Properties.Name -match [System.Text.RegularExpressions.Regex]::Escape($FromName)))
+            if (-not [bool]($ToObject.PSObject.Properties.Name -contains $FromName))
             {
                 Add-Member -InputObject $Removed -MemberType NoteProperty -Name $FromName -Value $FromValue
             }
