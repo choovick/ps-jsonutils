@@ -23,7 +23,7 @@ Was written to work on Windows PowerShell 5.1, but it also work with PowerShell 
 
 1. Arrays sub-objects are compared literally as strings after every object within array is sorted by keys and whole array is minified afterwards.
 
-2. Due to limitation of ConvertTo-Json in PowerShell 5.1 <https://github.com/PowerShell/PowerShell/issues/3705> object with case sensitive keys are not supported. E.g. Can't have object wil `KeyName` and `keyname`.
+2. Due to limitation of ConvertTo-Json in PowerShell 5.1 <https://github.com/PowerShell/PowerShell/issues/3705> object with case sensitive keys are not supported. E.g. Can't have object with `KeyName` and `keyname`.
 
 ## Install
 
@@ -65,7 +65,7 @@ SYNOPSIS
             whole array is minified afterwards.
 
         2. Due to limitation of ConvertTo-Json in PowerShell 5.1 <https://github.com/PowerShell/PowerShell/issues/3705>
-            object with case sensitive keys are not supported. E.g. Can't have object wil `KeyName` and `keyname`.
+            object with case sensitive keys are not supported. E.g. Can't have object with `KeyName` and `keyname`.
 
 
 SYNTAX
