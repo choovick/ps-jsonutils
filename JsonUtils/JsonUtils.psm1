@@ -12,7 +12,7 @@ function Get-JsonDifference
                 whole array is minified afterwards.
 
             2. Due to limitation of ConvertTo-Json in PowerShell 5.1 <https://github.com/PowerShell/PowerShell/issues/3705>
-                object with case sensitive keys are not supported. E.g. Can't have object wil `KeyName` and `keyname`.
+                object with case sensitive keys are not supported. E.g. Can't have object with `KeyName` and `keyname`.
 
     .PARAMETER FromJsonString
         Old variant of stringified JSON object.
